@@ -88,4 +88,4 @@ Occassions is built with a modern, high-performance tech stack:
 *   ✅ Multiple bonus features implemented (5%)
 
 ---
-*Built with ❤️ for the Byamn Internship Program.*
+*Built by Arnav Pundir.*
