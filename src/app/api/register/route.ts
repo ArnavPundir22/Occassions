@@ -1,4 +1,3 @@
-import { NextResponse } from 'next-auth/next';
 import { NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
 import dbConnect from '@/lib/mongoose';

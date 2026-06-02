@@ -3,6 +3,8 @@ import mongoose, { Document, Model, Schema } from 'mongoose';
 export interface IRegistration extends Document {
   eventId: mongoose.Types.ObjectId;
   attendeeId: mongoose.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const RegistrationSchema = new Schema<IRegistration>(
