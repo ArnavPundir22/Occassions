@@ -93,6 +93,8 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
 
   const isFull = event.capacity && attendeeCount >= event.capacity;
   const isPastDeadline = event.cutoffDate && new Date() > new Date(event.cutoffDate);
+  const eventDateTime = new Date(`${event.date}T${event.time}`);
+  const isPastEventTime = new Date() > eventDateTime;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -162,6 +164,11 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
                 <div className="bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 p-4 rounded-lg flex items-start">
                   <Info className="w-5 h-5 mr-2 shrink-0" />
                   <p className="text-sm font-medium">The registration deadline has passed.</p>
+                </div>
+              ) : isPastEventTime ? (
+                <div className="bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-400 p-4 rounded-lg flex items-start">
+                  <Info className="w-5 h-5 mr-2 shrink-0" />
+                  <p className="text-sm font-medium">This event has already started or passed.</p>
                 </div>
               ) : (
                 <button

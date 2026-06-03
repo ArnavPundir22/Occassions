@@ -34,7 +34,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ eve
       return NextResponse.json({ message: 'Registration deadline has passed.' }, { status: 400 });
     }
 
-    const eventDateTime = new Date(`${event.date}T${event.time}`);
+    // Parse event date and time assuming IST timezone (+05:30) to match the likely user context
+    const eventDateTime = new Date(`${event.date}T${event.time}+05:30`);
     if (new Date() > eventDateTime) {
       return NextResponse.json({ message: 'This event has already started or passed.' }, { status: 400 });
     }
