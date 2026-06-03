@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { ArrowLeft, Download, Users, Calendar, MapPin, Search } from 'lucide-react';
+import { ArrowLeft, Download, Users, Calendar, MapPin, Search, Edit, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function EventDashboardPage({ params }: { params: Promise<{ eventId: string }> }) {
@@ -16,6 +16,7 @@ export default function EventDashboardPage({ params }: { params: Promise<{ event
   const [event, setEvent] = useState<any>(null);
   const [attendees, setAttendees] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -46,6 +47,30 @@ export default function EventDashboardPage({ params }: { params: Promise<{ event
 
   const handleExportCSV = () => {
     window.open(`/api/events/${eventId}/export`, '_blank');
+  };
+
+  const handleDeleteEvent = async () => {
+    if (!window.confirm('Are you sure you want to delete this event? This action cannot be undone and all registrations will be removed.')) {
+      return;
+    }
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/events/${eventId}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        toast.success('Event deleted successfully');
+        router.push('/dashboard');
+        router.refresh();
+      } else {
+        const error = await res.json();
+        toast.error(error.message || 'Failed to delete event');
+        setIsDeleting(false);
+      }
+    } catch (error) {
+      toast.error('An error occurred');
+      setIsDeleting(false);
+    }
   };
 
   const filteredAttendees = attendees.filter((a) => 
@@ -81,20 +106,35 @@ export default function EventDashboardPage({ params }: { params: Promise<{ event
               <span className="flex items-center"><MapPin className="w-4 h-4 mr-1"/> {event.location}</span>
             </div>
           </div>
-          <div className="flex space-x-3">
-            <Link 
-              href={`/events/${eventId}`}
-              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium rounded-lg transition-colors"
+          <div className="flex flex-wrap space-x-3 gap-y-2 mt-4 md:mt-0">
+            <Link
+              href={`/dashboard/${eventId}/edit`}
+              className="flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm font-medium rounded-lg transition-colors shadow-sm"
             >
-              View Public Page
+              <Edit className="w-4 h-4 mr-2" />
+              Edit
             </Link>
+            <button
+              onClick={handleDeleteEvent}
+              disabled={isDeleting}
+              className="flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-red-200 dark:border-red-800/30 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 text-sm font-medium rounded-lg transition-colors shadow-sm disabled:opacity-50"
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </button>
             <button
               onClick={handleExportCSV}
               className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm transition-colors"
             >
               <Download className="w-4 h-4 mr-2" />
-              Export CSV
+              Export
             </button>
+            <Link 
+              href={`/events/${eventId}`}
+              className="flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium rounded-lg transition-colors"
+            >
+              View Public Page
+            </Link>
           </div>
         </div>
 
