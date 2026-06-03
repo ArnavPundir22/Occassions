@@ -28,10 +28,15 @@ export default function CreateEventPage() {
     setLoading(true);
 
     try {
+      const payload = {
+        ...formData,
+        cutoffDate: formData.cutoffDate ? new Date(formData.cutoffDate).toISOString() : undefined,
+      };
+
       const res = await fetch('/api/events', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {

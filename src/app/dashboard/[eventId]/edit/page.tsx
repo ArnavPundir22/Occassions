@@ -61,10 +61,15 @@ export default function EditEventPage({ params }: { params: Promise<{ eventId: s
     setLoading(true);
 
     try {
+      const payload = {
+        ...formData,
+        cutoffDate: formData.cutoffDate ? new Date(formData.cutoffDate).toISOString() : undefined,
+      };
+
       const res = await fetch(`/api/events/${eventId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {

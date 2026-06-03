@@ -34,6 +34,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ eve
       return NextResponse.json({ message: 'Registration deadline has passed.' }, { status: 400 });
     }
 
+    const eventDateTime = new Date(`${event.date}T${event.time}`);
+    if (new Date() > eventDateTime) {
+      return NextResponse.json({ message: 'This event has already started or passed.' }, { status: 400 });
+    }
+
     if (event.capacity) {
       const attendeeCount = await Registration.countDocuments({ eventId });
       if (attendeeCount >= event.capacity) {
