@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { ArrowLeft, Download, Users, Calendar, MapPin, Search, Edit, Trash2 } from 'lucide-react';
+import { ArrowLeft, Download, Users, Calendar, MapPin, Search, Edit, Trash2, Share2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function EventDashboardPage({ params }: { params: Promise<{ eventId: string }> }) {
@@ -47,6 +47,12 @@ export default function EventDashboardPage({ params }: { params: Promise<{ event
 
   const handleExportCSV = () => {
     window.open(`/api/events/${eventId}/export`, '_blank');
+  };
+
+  const handleShare = () => {
+    const url = `${window.location.origin}/events/${eventId}`;
+    navigator.clipboard.writeText(url);
+    toast.success('Event link copied to clipboard!');
   };
 
   const handleDeleteEvent = async () => {
@@ -128,6 +134,13 @@ export default function EventDashboardPage({ params }: { params: Promise<{ event
             >
               <Download className="w-4 h-4 mr-2" />
               Export
+            </button>
+            <button
+              onClick={handleShare}
+              className="flex items-center px-4 py-2 bg-indigo-100 dark:bg-indigo-900/30 hover:bg-indigo-200 dark:hover:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 text-sm font-medium rounded-lg transition-colors"
+            >
+              <Share2 className="w-4 h-4 mr-2" />
+              Share Link
             </button>
             <Link 
               href={`/events/${eventId}`}

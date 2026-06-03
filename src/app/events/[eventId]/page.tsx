@@ -4,7 +4,7 @@ import { useState, useEffect, use } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
-import { Calendar, MapPin, Users, Clock, Info } from 'lucide-react';
+import { Calendar, MapPin, Users, Clock, Info, Share2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function EventPage({ params }: { params: Promise<{ eventId: string }> }) {
@@ -36,6 +36,11 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast.success('Event link copied to clipboard!');
   };
 
   const handleRegister = async () => {
@@ -142,7 +147,7 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
               </div>
             </div>
 
-            <div className="pt-2">
+            <div className="pt-2 space-y-4">
               {event.isClosed ? (
                 <div className="bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-4 rounded-lg flex items-start">
                   <Info className="w-5 h-5 mr-2 shrink-0" />
@@ -167,6 +172,14 @@ export default function EventPage({ params }: { params: Promise<{ eventId: strin
                   {registering ? 'Registering...' : 'Register Now'}
                 </button>
               )}
+
+              <button
+                onClick={handleShare}
+                className="w-full flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750 text-gray-700 dark:text-gray-300 font-medium py-3 px-4 rounded-xl shadow-sm transition-colors"
+              >
+                <Share2 className="w-5 h-5 mr-2" />
+                Share Event
+              </button>
             </div>
           </div>
         </div>
