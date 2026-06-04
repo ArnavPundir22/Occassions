@@ -13,62 +13,72 @@ export default function Navbar() {
     router.push('/');
   };
 
-  return (
-    <nav className="bg-white dark:bg-gray-900 border-b dark:border-gray-800 shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0 flex items-center">
-              <span className="font-bold text-xl text-blue-600 dark:text-blue-500">Occassions</span>
-            </Link>
-          </div>
-          <div className="flex items-center space-x-4">
-            {session ? (
-              <>
-                <span className="text-sm text-gray-700 dark:text-gray-300 hidden sm:block">
-                  Hello, {session.user?.name}
-                </span>
-                {session.user?.role === 'HOST' ? (
-                  <Link
-                    href="/dashboard"
-                    className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                ) : (
-                  <Link
-                    href="/attendee/my-events"
-                    className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    My Events
-                  </Link>
-                )}
-                <button
-                  onClick={handleSignOut}
-                  className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Sign Out
-                </button>
-              </>
-            ) : (
-              <>
+ return (
+  <nav className="sticky top-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur-2xl">
+    <div className="mx-auto max-w-7xl px-6">
+      <div className="flex h-16 items-center justify-between">
+
+        <Link
+          href="/"
+          className="group flex items-center gap-2"
+        >
+          <div className="h-2 w-2 rounded-full bg-indigo-500 shadow-[0_0_20px_#6366f1]" />
+          <span className="text-xl font-bold tracking-tight text-white">
+            Occassions
+          </span>
+        </Link>
+
+        <div className="flex items-center gap-3">
+
+          {session ? (
+            <>
+              <span className="hidden md:block text-sm text-zinc-400">
+                Hello, {session.user?.name}
+              </span>
+
+              {session.user?.role === 'HOST' ? (
                 <Link
-                  href="/login"
-                  className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  href="/dashboard"
+                  className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-300 transition-all hover:bg-white/5 hover:text-white"
                 >
-                  Log In
+                  Dashboard
                 </Link>
+              ) : (
                 <Link
-                  href="/register"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-colors"
+                  href="/attendee/my-events"
+                  className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-300 transition-all hover:bg-white/5 hover:text-white"
                 >
-                  Sign Up
+                  My Events
                 </Link>
-              </>
-            )}
-          </div>
+              )}
+
+              <button
+                onClick={handleSignOut}
+                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-zinc-200 transition-all hover:bg-white/10"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-300 transition-all hover:bg-white/5 hover:text-white"
+              >
+                Log In
+              </Link>
+
+              <Link
+                href="/register"
+                className="rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 px-5 py-2 text-sm font-semibold text-white transition-all hover:scale-[1.02]"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </div>
-    </nav>
-  );
+    </div>
+  </nav>
+);
 }
